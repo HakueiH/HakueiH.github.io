@@ -1,0 +1,789 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hakuei Huang</title>
+<meta name="description" content="Hakuei Huang — designer and AI agent manager. Raising productivity with AI agents, built around what people actually need.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F4F4F2; --surface:#FFFFFF; --ink:#111110; --ink-2:#55554F; --ink-3:#6B6B64;
+  --rule:#DEDEDA; --rule-strong:#111110; --accent:#E0531F; --accent-ink:#B43D0E; --accent-soft:#FBE7DE;
+  --chip:#ECECE8; --shadow:0 1px 0 rgba(0,0,0,.03), 0 12px 32px -18px rgba(0,0,0,.18);
+  --sans:"Hanken Grotesk","Noto Sans SC",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  --max:1160px; --gut:clamp(16px,4vw,48px);
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#121211; --surface:#1A1A18; --ink:#EDEDE8; --ink-2:#AAAAA2; --ink-3:#8E8E86;
+    --rule:#2C2C29; --rule-strong:#EDEDE8; --accent:#F06A36; --accent-ink:#F06A36; --accent-soft:#3A2218;
+    --chip:#24241F; --shadow:0 12px 32px -18px rgba(0,0,0,.6); color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#121211; --surface:#1A1A18; --ink:#EDEDE8; --ink-2:#AAAAA2; --ink-3:#8E8E86;
+  --rule:#2C2C29; --rule-strong:#EDEDE8; --accent:#F06A36; --accent-ink:#F06A36; --accent-soft:#3A2218;
+  --chip:#24241F; --shadow:0 12px 32px -18px rgba(0,0,0,.6); color-scheme:dark;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--ink);font:400 17px/1.55 var(--sans);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 var(--gut)}
+.mono{font-family:var(--mono);font-size:12.5px;letter-spacing:.01em;color:var(--ink-3)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
+
+/* header */
+header.top{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:saturate(1.4) blur(10px);-webkit-backdrop-filter:saturate(1.4) blur(10px);border-bottom:1px solid var(--rule)}
+header.top .wrap{display:flex;align-items:center;justify-content:space-between;height:60px;gap:16px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:600;font-size:15px}
+.brand i{width:11px;height:11px;background:var(--ink);display:inline-block}
+nav.links{display:flex;gap:28px;align-items:center}
+nav.links a{font-family:var(--mono);font-size:12.5px;color:var(--ink-2)}
+nav.links a:hover{color:var(--ink)}
+.theme{background:none;border:1px solid var(--rule);color:var(--ink-2);width:30px;height:30px;border-radius:50%;cursor:pointer;display:grid;place-items:center}
+.theme:hover{color:var(--ink);border-color:var(--ink-3)}
+@media (max-width:720px){nav.links a:not(.keep){display:none}}
+
+/* hero */
+.hero{padding-top:clamp(56px,10vw,120px);padding-bottom:56px}
+.hero .eyebrow{margin-bottom:22px}
+.hero h1{font-weight:500;font-size:clamp(40px,5.4vw,76px);line-height:1.12;letter-spacing:-.035em;max-width:none}
+.hero h1 em{font-style:normal;color:var(--ink-3);display:block;text-wrap:balance;margin-top:.1em}
+.hero-grid{display:grid;grid-template-columns:1.25fr 1fr;gap:clamp(32px,5vw,72px);align-items:start;margin-top:40px}
+.lede{font-size:clamp(18px,1.6vw,21px);color:var(--ink-2);max-width:34em;line-height:1.5}
+.lede strong{color:var(--ink);font-weight:500}
+.meta-row{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:22px}
+.dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--accent);margin-right:7px;vertical-align:1px}
+@media (max-width:880px){.hero-grid{grid-template-columns:1fr}}
+
+/* console */
+.console{background:var(--surface);border:1px solid var(--rule);border-radius:10px;box-shadow:var(--shadow);overflow:hidden}
+.console .bar{display:flex;justify-content:space-between;align-items:center;padding:11px 16px;border-bottom:1px solid var(--rule)}
+.console .bar b{font-weight:500;font-size:13px}
+.console ol{list-style:none;padding:8px 0;height:236px;overflow:hidden;position:relative}
+.console li{display:grid;grid-template-columns:62px 72px 1fr;gap:10px;padding:7px 16px;font-family:var(--mono);font-size:12px;line-height:1.45;color:var(--ink-2);animation:in .5s ease both}
+.console li .who{color:var(--ink)}
+.console li .ok{color:var(--accent-ink)}
+.console li.new{background:linear-gradient(90deg,var(--accent-soft),transparent 70%)}
+.console .foot{border-top:1px solid var(--rule);padding:10px 16px;display:flex;justify-content:space-between}
+@keyframes in{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+
+/* stats */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+.stat{padding:26px 0 24px;padding-right:16px}
+.stat + .stat{padding-left:clamp(12px,2vw,24px);border-left:1px solid var(--rule)}
+.stat b{display:block;font-size:clamp(30px,3.4vw,42px);font-weight:500;letter-spacing:-.03em;line-height:1}
+.stat span{display:block;margin-top:10px}
+@media (max-width:720px){.stats{grid-template-columns:1fr 1fr}.stat:nth-child(3){border-left:0;padding-left:0}.stat:nth-child(n+3){border-top:1px solid var(--rule)}}
+
+/* sections */
+section{padding:clamp(72px,10vw,128px) 0 0}
+.sec-head{display:grid;grid-template-columns:220px 1fr;gap:24px;border-top:1px solid var(--rule-strong);padding-top:20px;margin-bottom:clamp(36px,5vw,56px)}
+.sec-head h2{font-size:clamp(28px,3.6vw,44px);font-weight:500;letter-spacing:-.025em;line-height:1.16;max-width:30ch;text-wrap:balance}
+.sec-head p{color:var(--ink-2);margin-top:14px;max-width:40em;font-size:18px}
+.sec-head .label b{display:block;font-weight:500;font-size:16px;color:var(--ink);font-family:var(--sans);margin-bottom:4px}
+@media (max-width:880px){.sec-head{grid-template-columns:1fr;gap:10px}}
+
+/* case study */
+.case{display:grid;grid-template-columns:220px 1fr;gap:24px}
+.case > aside dl{display:grid;gap:18px}
+.case > aside dt{margin-bottom:3px}
+.case > aside dd{font-size:15px}
+@media (max-width:880px){.case{grid-template-columns:1fr}.case > aside dl{grid-template-columns:1fr 1fr}}
+
+.frame{background:var(--surface);border:1px solid var(--rule);border-radius:12px;box-shadow:var(--shadow);overflow:hidden}
+.chrome{display:flex;align-items:center;gap:14px;padding:10px 14px;border-bottom:1px solid var(--rule)}
+.lights{display:flex;gap:6px}.lights i{width:10px;height:10px;border-radius:50%;background:var(--rule)}
+.url{background:var(--chip);border-radius:6px;padding:3px 12px;flex:1;max-width:340px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tabs{display:flex;gap:2px;padding:8px 10px 0;border-bottom:1px solid var(--rule);overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tabs button{font:500 14px var(--sans);color:var(--ink-2);background:none;border:0;border-bottom:2px solid transparent;padding:8px 12px 10px;cursor:pointer;white-space:nowrap}
+.tabs button small{font:400 11px var(--mono);color:var(--ink-3);margin-left:4px}
+.tabs button:hover{color:var(--ink)}
+.tabs button.on{color:var(--ink);border-bottom-color:var(--accent)}
+.stage{position:relative;aspect-ratio:1800/1125;background:#f5f6fb;overflow:hidden}
+.stage img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top center;opacity:0;transition:opacity .45s ease}
+.stage img.on{opacity:1}
+.caption{display:flex;justify-content:space-between;gap:16px;padding:14px 16px;border-top:1px solid var(--rule);font-size:14.5px;color:var(--ink-2)}
+.caption .mono{white-space:nowrap}
+.case > *{min-width:0}
+@media (max-width:560px){.caption{flex-direction:column;gap:6px}}
+.stage,.zoomable{cursor:zoom-in}
+.zoomable:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.zoomable{transition:opacity .2s ease}
+.zoomable:hover{opacity:.92}
+.lb{position:fixed;inset:0;z-index:50;background:rgba(10,10,9,.86);display:none;overflow:auto;padding:24px;cursor:zoom-out}
+.lb.on{display:block}
+.lb img{max-width:none;width:min(1800px,100%);margin:0 auto;border-radius:8px}
+.lb .x{position:fixed;top:14px;right:18px;color:#fff;font:400 13px var(--mono)}
+
+.phases{margin-bottom:clamp(36px,5vw,56px)}
+.phase-label{color:var(--ink-3);margin-bottom:12px}
+.sec-head h2.h2-quote{max-width:none;line-height:1.18}
+.h2-quote em{font-style:normal;color:var(--ink-3)}
+.cols3.six > div{padding-top:28px;padding-bottom:32px}
+.cols3.six{border-bottom:1px solid var(--rule)}
+.cols3.six > div:nth-child(3n+1){padding-left:0;border-left:0}
+.cols3.six > div:nth-child(n+4){border-top:1px solid var(--rule)}
+.cols3{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin-top:40px;border-top:1px solid var(--rule)}
+.cols3 > div{padding:22px 24px 4px 0}
+.cols3 > div + div{padding-left:24px;border-left:1px solid var(--rule)}
+.cols3 h3{font-weight:500;font-size:18px;margin:8px 0 8px;letter-spacing:-.01em}
+.cols3 p{color:var(--ink-2);font-size:15.5px}
+@media (max-width:880px){.cols3{grid-template-columns:1fr}.cols3 > div + div{padding-left:0;border-left:0;border-top:1px solid var(--rule)}}
+
+/* system diagram */
+.system{margin-top:56px;display:grid;grid-template-columns:1fr 40px 1.1fr 40px 1.2fr;align-items:stretch}
+.sys-col{display:flex;flex-direction:column;gap:8px}
+.sys-col .mono{margin-bottom:4px}
+.node{background:var(--surface);border:1px solid var(--rule);border-radius:8px;padding:11px 13px;font-size:14px;line-height:1.35}
+.node small{display:block;font-family:var(--mono);font-size:11px;color:var(--ink-3);margin-top:3px}
+.node.core{border-color:var(--ink);}
+.node.accent{border-color:var(--accent)}
+.arrow{display:grid;place-items:center;color:var(--ink-3)}
+.arrow svg{width:22px;height:22px}
+.roles{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}
+.roles span{font-size:12px;padding:2px 8px;border-radius:4px;background:var(--chip);color:var(--ink-2)}
+@media (max-width:880px){.system{grid-template-columns:1fr}.arrow{height:36px}.arrow svg{transform:rotate(90deg)}}
+
+/* method */
+.loop{display:grid;grid-template-columns:repeat(5,1fr);border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+.step{padding:24px 20px 28px 0;position:relative}
+.step + .step{padding-left:20px;border-left:1px solid var(--rule)}
+.step .n{display:flex;justify-content:space-between;align-items:center}
+.step h3{font-weight:500;font-size:20px;letter-spacing:-.015em;margin:18px 0 8px}
+.step p{font-size:15px;color:var(--ink-2)}
+.step .art{margin-top:16px;font-family:var(--mono);font-size:11px;color:var(--ink-3);border-top:1px dashed var(--rule);padding-top:10px}
+.step:last-child .n .mono:last-child{color:var(--accent)}
+@media (max-width:980px){.loop{grid-template-columns:1fr 1fr}.step:nth-child(odd){padding-left:0;border-left:0}.step:nth-child(n+3){border-top:1px solid var(--rule)}.step:last-child{grid-column:1/-1}}
+@media (max-width:560px){.loop{grid-template-columns:1fr}.step,.step + .step{padding-left:0;border-left:0}.step + .step{border-top:1px solid var(--rule)}}
+
+.roster{display:grid;grid-template-columns:1fr 1fr;gap:clamp(24px,4vw,48px);margin-top:56px;align-items:start}
+.roster table{width:100%;border-collapse:collapse;font-size:15px}
+.roster th{text-align:left;font-family:var(--mono);font-weight:400;font-size:12px;color:var(--ink-3);padding:0 0 10px;border-bottom:1px solid var(--rule-strong)}
+.roster td{padding:13px 12px 13px 0;border-bottom:1px solid var(--rule);vertical-align:top}
+.roster td:first-child{font-weight:500;white-space:nowrap}
+.roster td:last-child{color:var(--ink-2)}
+.memo{background:var(--surface);border:1px solid var(--rule);border-radius:10px;box-shadow:var(--shadow);font-family:var(--mono);font-size:12.5px;line-height:1.7;color:var(--ink-2);overflow:hidden}
+.memo .bar{padding:10px 16px;border-bottom:1px solid var(--rule);display:flex;justify-content:space-between}
+.memo pre{padding:16px;white-space:pre-wrap;font:inherit}
+.memo .k{color:var(--ink)}
+.memo .a{color:var(--accent-ink)}
+@media (max-width:880px){.roster{grid-template-columns:1fr}}
+
+/* work grid */
+.work{display:grid;grid-template-columns:repeat(12,1fr);gap:clamp(16px,2vw,24px)}
+.card{grid-column:span 6;display:flex;flex-direction:column;gap:14px}
+.card.wide{grid-column:span 12}
+.card .vis{aspect-ratio:16/10;border-radius:10px;border:1px solid var(--rule);background:var(--surface);overflow:hidden;position:relative;display:grid;place-items:center}
+.card.wide .vis{aspect-ratio:21/9}
+.card .vis img{width:100%;height:100%;object-fit:cover;object-position:center 30%}
+.card .info{display:flex;justify-content:space-between;gap:16px;align-items:baseline}
+.card h3{font-weight:500;font-size:20px;letter-spacing:-.015em}
+.card p{color:var(--ink-2);font-size:15.5px;max-width:36em}
+.tags{display:flex;gap:6px;flex-wrap:wrap}
+.work.three .card{grid-column:span 4}
+@media (max-width:960px){.work.three .card{grid-column:span 12}}
+.hero-shot{width:100%;aspect-ratio:1400/875;object-fit:cover;object-position:top}
+.qgrid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(16px,2vw,24px);margin-top:clamp(16px,2vw,24px)}
+.q img{width:100%;aspect-ratio:16/10;object-fit:cover;object-position:top;border:1px solid var(--rule);border-radius:10px;background:#F4F4F2}
+.q figcaption{display:flex;flex-direction:column;gap:4px;margin-top:12px}
+.q h3{font-weight:500;font-size:19px;letter-spacing:-.015em}
+@media (max-width:760px){.qgrid{grid-template-columns:1fr}}
+.chip{font-family:var(--mono);font-size:11.5px;padding:4px 10px;border-radius:999px;background:var(--chip);color:var(--ink-2)}
+@media (max-width:760px){.card{grid-column:span 12}.card.wide .vis{aspect-ratio:16/10}}
+
+/* experience */
+.xp{border-top:1px solid var(--rule)}
+.xp-row{display:grid;grid-template-columns:140px 1fr 1.3fr;gap:24px;padding:22px 0;border-bottom:1px solid var(--rule)}
+.xp-row h3{font-weight:500;font-size:17px}
+.xp-row h3 span{color:var(--ink-3);font-weight:400}
+.xp-row p{color:var(--ink-2);font-size:15.5px}
+.xp-row.now .mono:first-child::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--accent);margin-right:8px;vertical-align:1px}
+@media (max-width:760px){.xp-row{grid-template-columns:1fr;gap:6px}}
+
+/* about */
+.about{display:grid;grid-template-columns:220px 1fr;gap:24px;border-top:1px solid var(--rule-strong);padding-top:20px}
+.about > :not(:first-child){grid-column:2}
+.about .big{max-width:32ch;text-wrap:balance;color:var(--ink)}
+.about-cols{display:grid;grid-template-columns:1fr 1fr;gap:clamp(24px,3vw,40px);margin-top:8px}
+.about .facts{grid-template-columns:repeat(3,1fr);column-gap:clamp(24px,3vw,40px);margin-top:16px;border-top:1px solid var(--rule)}
+.about .facts li{flex-direction:column;justify-content:flex-start;gap:2px;padding:14px 0 16px}
+.about .facts li span:first-child{font-family:var(--mono);font-size:12px;color:var(--ink-3)}
+.about .facts li span:last-child{text-align:left;color:var(--ink)}
+@media (max-width:880px){.about > :not(:first-child){grid-column:1}.about-cols{grid-template-columns:1fr}.about .facts{grid-template-columns:1fr 1fr}}
+.about .big{font-size:clamp(24px,2.6vw,32px);line-height:1.3;letter-spacing:-.015em;font-weight:400}
+.about .big .jp{font-family:"Noto Sans SC",var(--sans);color:var(--ink-3)}
+.about p{color:var(--ink-2)}
+.about ul{list-style:none;display:grid;gap:0;align-self:start;align-content:start}
+.about li{display:flex;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px solid var(--rule);font-size:15px}
+.about li span:last-child{color:var(--ink-2);text-align:right}
+@media (max-width:880px){.about{grid-template-columns:1fr}}
+
+/* contact */
+.contact{padding:clamp(80px,12vw,160px) 0 48px}
+.contact h2{font-size:clamp(36px,6.4vw,80px);font-weight:500;letter-spacing:-.035em;line-height:1.08;max-width:22ch;text-wrap:balance}
+.contact a.mail{display:inline-flex;align-items:center;gap:12px;margin-top:32px;font-size:clamp(18px,2vw,24px);border-bottom:1px solid var(--ink);padding-bottom:4px;word-break:break-all}
+.contact a.mail:hover{color:var(--accent);border-color:var(--accent)}
+footer{border-top:1px solid var(--rule);padding:22px 0 40px}
+footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+
+.reveal{opacity:0;transform:translateY(14px);transition:opacity .8s ease,transform .8s cubic-bezier(.2,.7,.2,1)}
+.reveal.on{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}.console li{animation:none}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#top"><i></i>Hakuei Huang</a>
+    <nav class="links" aria-label="Sections">
+      <a href="#erp">ERP</a>
+      <a href="#anatomy">Anatomy</a>
+      <a href="#principles">Principles</a>
+      <a href="#method">Method</a>
+      <a href="#work">Work</a>
+      <a href="#experience">Experience</a>
+      <a href="#contact" class="keep">Contact</a>
+      <button class="theme" id="theme" aria-label="Toggle dark mode" title="Toggle theme">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z"/></svg>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <!-- HERO -->
+  <div class="wrap hero">
+    <div class="mono eyebrow">Designer · AI agent manager · Shenzhen &amp; Hong Kong</div>
+    <h1>I design the system, <em>then I run the agents that build it.</em></h1>
+    <div class="hero-grid">
+      <div>
+        <p class="lede"><strong>My goal: raise productivity with the efficiency of AI agents, built around what people actually need.</strong> Eight years in automotive HMI for Karma, BYTON and SF Motors, then programs for Toyota, Mitsubishi and SAIC. Today I run a cross-border trading company, and the software it runs on was specified, reviewed and shipped by me with a team of AI agents.</p>
+        <div class="meta-row mono">
+          <span><span class="dot"></span>Helping Japan-focused founders build globally</span>
+          <span>EN · 日本語 · 中文</span>
+        </div>
+      </div>
+      <div class="console" aria-label="Recent agent activity (illustrative)">
+        <div class="bar"><b>Agent log</b><span class="mono">wellstar / erp</span></div>
+        <ol id="log"></ol>
+        <div class="foot mono"><span>human sign-off before deploy</span><span id="clock">—</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="stats">
+      <div class="stat"><b>10+</b><span class="mono">years designing<br>interfaces</span></div>
+      <div class="stat"><b>4</b><span class="mono">patents filed<br>in-vehicle HMI</span></div>
+      <div class="stat"><b>6</b><span class="mono">ERP modules built<br>with AI agents</span></div>
+      <div class="stat"><b>3</b><span class="mono">languages, fluent<br>EN · JA · ZH</span></div>
+    </div>
+  </div>
+
+  <!-- ERP CASE STUDY -->
+  <section id="erp">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <div class="label mono"><b>Case study</b>01 · 2026</div>
+        <div>
+          <h2>An ERP for a commodity trader, built by one GM and a team of agents.</h2>
+          <p>Wellstar trades agricultural commodities from Thailand and Vietnam into China: about 20 million in annual revenue at a 3–5% margin, with a team of 20. I manage the business end to end. At those margins every hour and every number counts, so the system started with people, not software.</p>
+        </div>
+      </div>
+
+      <div class="phases reveal">
+        <div class="mono phase-label">A real use case, in the order it happened</div>
+        <div class="loop">
+          <div class="step">
+            <div class="n"><span class="mono">01</span><span class="mono">listen</span></div>
+            <h3>Interview</h3>
+            <p>Sat with each team and mapped how work really moved: who asks whom, where Excel ends and WeChat begins.</p>
+            <div class="art">interviews · workflow maps</div>
+          </div>
+          <div class="step">
+            <div class="n"><span class="mono">02</span><span class="mono">simplify</span></div>
+            <h3>Fix the workflow</h3>
+            <p>Removed handoffs and double entry before writing any code. The first win was process, not AI.</p>
+            <div class="art">fewer steps, same team</div>
+          </div>
+          <div class="step">
+            <div class="n"><span class="mono">03</span><span class="mono">structure</span></div>
+            <h3>Clear data</h3>
+            <p>Agents turned scattered spreadsheets into one clear data structure, so the dashboards show insight, not rows.</p>
+            <div class="art">templates → pipeline → dashboards</div>
+          </div>
+          <div class="step">
+            <div class="n"><span class="mono">04</span><span class="mono">automate</span></div>
+            <h3>Agents at work</h3>
+            <p>Agents now read email, ask vendors for quotations and bring the replies into the system.</p>
+            <div class="art">email · quotes · WeCom</div>
+          </div>
+          <div class="step">
+            <div class="n"><span class="mono">05</span><span class="mono">next</span></div>
+            <h3>Factory to customer</h3>
+            <p>End-to-end supply tracking: one thread for every lot, from the factory through shipping and warehouse to the customer.</p>
+            <div class="art">in planning</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="case">
+        <aside class="reveal">
+          <dl>
+            <div><dt class="mono">Business</dt><dd>20M revenue · 3–5% margin · team of 20</dd></div>
+            <div><dt class="mono">Role</dt><dd>GM, product owner, designer, agent lead</dd></div>
+            <div><dt class="mono">Team</dt><dd>Me + Claude Code, Grok, WeCom bots</dd></div>
+            <div><dt class="mono">Users</dt><dd>Import, logistics, sales, warehouse, finance</dd></div>
+            <div><dt class="mono">Stack</dt><dd>Excel → Python pipeline, FastAPI, Synology NAS</dd></div>
+          </dl>
+        </aside>
+
+        <div class="reveal">
+          <div class="frame shots">
+            <div class="chrome">
+              <span class="lights"><i></i><i></i><i></i></span>
+              <span class="url mono" id="shot-url">nas:8000/shipping.html</span>
+            </div>
+            <div class="tabs" role="tablist" aria-label="ERP modules">
+              <button role="tab" class="on" data-i="0">到港物流 <small>Shipping</small></button>
+              <button role="tab" data-i="1">库存地图 <small>Map</small></button>
+              <button role="tab" data-i="2">销售历史 <small>Sales</small></button>
+              <button role="tab" data-i="3">品控 <small>QC</small></button>
+              <button role="tab" data-i="4">财务总账 <small>Finance</small></button>
+            </div>
+            <div class="stage" tabindex="0" role="button" aria-label="Enlarge screenshot">
+              <img src="assets/erp/shipping.jpg" alt="Shipping &amp; Imports dashboard" data-i="0" class="on">
+              <img src="assets/erp/map.jpg" alt="Warehouse map: inventory across China" data-i="1" loading="lazy">
+              <img src="assets/erp/sales.jpg" alt="Sales history, 2012 to 2026" data-i="2" loading="lazy">
+              <img src="assets/erp/quality.jpg" alt="品控 quality control dashboard" data-i="3" loading="lazy">
+              <img src="assets/erp/ledger.jpg" alt="Finance general-ledger workbench for the 总账 role" data-i="4" loading="lazy">
+            </div>
+            <div class="caption"><span id="shot-cap">Every inbound container from loading port to warehouse: in transit, scheduled, at port, cleared, with days-to-arrival.</span><span class="mono" id="shot-n">1 / 5 · click to enlarge</span></div>
+          </div>
+
+          <div class="cols3">
+            <div>
+              <span class="mono">Decision 01</span>
+              <h3>Keep Excel as the source of truth</h3>
+              <p>The team already lives in spreadsheets. Instead of forcing a new tool, a pipeline reads their templates and renders the dashboards. Adoption cost: zero.</p>
+            </div>
+            <div>
+              <span class="mono">Decision 02</span>
+              <h3>One URL per role</h3>
+              <p>Sales, logistics, finance and the stamp holder each get their own link, locked to what they can do. Each role lives in its own folder, so access is granted per folder on the NAS, not through a login screen nobody remembers.</p>
+            </div>
+            <div>
+              <span class="mono">Decision 03</span>
+              <h3>Numbers must reconcile</h3>
+              <p>Every refresh is checked against the source files. A deterministic validator flags drift, mismatched months and stale values before anyone sees a chart.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- system -->
+      <div class="system reveal" aria-label="System architecture">
+        <div class="sys-col">
+          <div class="mono">Team inputs · Excel</div>
+          <div class="node">Import &amp; logistics<small>ETD / ETA, forwarders, ports</small></div>
+          <div class="node">Warehouse baseline<small>stock snapshot at cutoff</small></div>
+          <div class="node">Sales, one tab per month<small>+ 2012–2025 history</small></div>
+        </div>
+        <div class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 12h15M14 7l5 5-5 5"/></svg></div>
+        <div class="sys-col">
+          <div class="mono">Engine · admin only</div>
+          <div class="node core">Refresh pipeline<small>reads templates, applies movements</small></div>
+          <div class="node core">FastAPI service<small>allocation, transfers, notes, locks</small></div>
+          <div class="node accent">QC validator<small>totals reconcile or it fails loudly</small></div>
+        </div>
+        <div class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 12h15M14 7l5 5-5 5"/></svg></div>
+        <div class="sys-col">
+          <div class="mono">What people use</div>
+          <div class="node">Dashboards<div class="roles"><span>库存地图</span><span>到港物流</span><span>销售历史</span><span>品控</span></div></div>
+          <div class="node">Outgoing sales orders<div class="roles"><span>销售</span><span>物流</span><span>财务</span><span>盖章</span></div></div>
+          <div class="node">Finance ledger<div class="roles"><span>总账</span><span>出纳</span><span>财务总监</span><span>进口部</span></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ANATOMY -->
+  <section id="anatomy">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <div class="label mono"><b>Case study</b>02 · Anatomy · 2026</div>
+        <div>
+          <h2 class="h2-quote">It started with one question:<br><em>“How does a rocket fly?”</em></h2>
+          <p>My three-year-old son asked it, and Anatomy is my answer: an interactive site I made for my children’s education. I built every machine as a 3D model, along with how it is used, so a kid can turn it, take it apart and make it work. Each page is one question, one model and one slider. Art direction is mine; the models, copy and fact-checking were built with agents.</p>
+        </div>
+      </div>
+
+      <figure class="frame reveal">
+        <div class="chrome"><span class="lights"><i></i><i></i><i></i></span><span class="url mono">anatomy / falcon9-parts</span></div>
+        <img class="hero-shot" src="assets/anatomy-falcon9.jpg" alt="Anatomy: a Falcon 9 booster pulled apart into nine numbered parts, with a parts list beside it" loading="lazy">
+        <figcaption class="caption"><span>Take it apart: pull the slider and the booster separates into nine numbered parts. Tap any part to see what it does.</span><span class="mono">Falcon 9</span></figcaption>
+      </figure>
+
+      <div class="qgrid">
+        <figure class="q reveal">
+          <img src="assets/anatomy/falcon9.jpg" alt="Landing a booster: a Falcon 9 model with a four-step lesson and an engine-burn slider" loading="lazy">
+          <figcaption><h3>How does a rocket land on a ship?</h3><span class="mono">Falcon 9 · drag the engine burn</span></figcaption>
+        </figure>
+        <figure class="q reveal">
+          <img src="assets/anatomy/wright.jpg" alt="Wing warping: the 1903 Wright Flyer with arrows showing the wingtips twisting" loading="lazy">
+          <figcaption><h3>How did the first airplane turn?</h3><span class="mono">1903 Wright Flyer · slide the pilot's hip cradle</span></figcaption>
+        </figure>
+        <figure class="q reveal">
+          <img src="assets/anatomy/seaplane.jpg" alt="Getting off the water: a flying boat with a speed slider and lift arrows under the hull" loading="lazy">
+          <figcaption><h3>How does a boat turn into a plane?</h3><span class="mono">Flying boat · drag the speed</span></figcaption>
+        </figure>
+        <figure class="q reveal">
+          <img src="assets/anatomy/roadster-grip.jpg" alt="Grip without speed: a sports car model with a speed slider showing wing downforce" loading="lazy">
+          <figcaption><h3>How can a car grip the road when it's slow?</h3><span class="mono">Roadster · turn on the fans</span></figcaption>
+        </figure>
+      </div>
+
+      <div class="cols3 reveal">
+        <div>
+          <span class="mono">Principle 01</span>
+          <h3>One question per page</h3>
+          <p>Every page starts from a question a kid would ask, answered in a sentence or two of plain words. The model does the explaining.</p>
+        </div>
+        <div>
+          <span class="mono">Principle 02</span>
+          <h3>Learn by doing</h3>
+          <p>Each idea is a gesture: drag a slider, turn the model, tap a part. Four short steps per machine, so the lesson never outruns attention.</p>
+        </div>
+        <div>
+          <span class="mono">Principle 03</span>
+          <h3>Simple, never wrong</h3>
+          <p>Models are checked against real references and every claim has a listed source. A kid's version can leave things out, but it can't make things up.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRINCIPLES -->
+  <section id="principles">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <div class="label mono"><b>Principles</b>03 · Design for an AI world</div>
+        <div>
+          <h2>AI should make work feel lighter, not stranger.</h2>
+          <p>Six rules I hold myself and my agents to, learned from automotive HMI, from running a trading company, and from building for my kids.</p>
+        </div>
+      </div>
+      <div class="cols3 six reveal">
+        <div>
+          <span class="mono">01</span>
+          <h3>Start with people, not models</h3>
+          <p>Interview first. Watch how the work actually moves. The need decides what gets automated, never the novelty.</p>
+        </div>
+        <div>
+          <span class="mono">02</span>
+          <h3>Fix the workflow before adding AI</h3>
+          <p>Automating a messy process only makes the mess faster. Simplify the steps, then let agents carry them.</p>
+        </div>
+        <div>
+          <span class="mono">03</span>
+          <h3>Structure first, insight second</h3>
+          <p>AI is only as clear as the data underneath. A clean structure is what turns records into decisions.</p>
+        </div>
+        <div>
+          <span class="mono">04</span>
+          <h3>Agents draft, people decide</h3>
+          <p>Agents fetch, compare and prepare. A person signs off on prices, money and anything that leaves the company.</p>
+        </div>
+        <div>
+          <span class="mono">05</span>
+          <h3>Show the source</h3>
+          <p>Every number reconciles and every claim is cited. Trust comes from being able to check, not from sounding sure.</p>
+        </div>
+        <div>
+          <span class="mono">06</span>
+          <h3>Minimal, useful, with a little joy</h3>
+          <p>Remove until it is clear. Make it refined enough to trust. Then leave one moment that makes people smile.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- METHOD -->
+  <section id="method">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <div class="label mono"><b>Method</b>04 · Agent management</div>
+        <div>
+          <h2>Managing agents is a design job.</h2>
+          <p>Agents are fast and confident, and occasionally wrong. My job is the same as it was with engineering teams in Tokyo and Shanghai: write a clear brief, review the work against real users, and never accept a number I haven't checked.</p>
+        </div>
+      </div>
+
+      <div class="loop reveal">
+        <div class="step">
+          <div class="n"><span class="mono">01</span><span class="mono">brief</span></div>
+          <h3>Specify</h3>
+          <p>A PRD with success criteria before any code. Short, dated, written in the team's language.</p>
+          <div class="art">PRD_stock_transfer_转库.md</div>
+        </div>
+        <div class="step">
+          <div class="n"><span class="mono">02</span><span class="mono">build</span></div>
+          <h3>Delegate</h3>
+          <p>Agents build in parallel on separate files. Surgical edits only; nothing outside the brief.</p>
+          <div class="art">claude code · grok · subagents</div>
+        </div>
+        <div class="step">
+          <div class="n"><span class="mono">03</span><span class="mono">review</span></div>
+          <h3>Critique</h3>
+          <p>Nielsen heuristic reviews on the live system, severity-rated, with concrete fixes.</p>
+          <div class="art">UX启发式评估_实机.md · sev 1–4</div>
+        </div>
+        <div class="step">
+          <div class="n"><span class="mono">04</span><span class="mono">verify</span></div>
+          <h3>Reconcile</h3>
+          <p>Totals checked against source files. A dedicated QC validator checks each refresh for drift.</p>
+          <div class="art">wellstar-qc · drift 0.0</div>
+        </div>
+        <div class="step">
+          <div class="n"><span class="mono">05</span><span class="mono">remember</span></div>
+          <h3>Record</h3>
+          <p>Decisions, traps and root causes go into memory files, so the next session starts smarter.</p>
+          <div class="art">AGENTS.md · MEMORY.md · playbooks/</div>
+        </div>
+      </div>
+
+      <div class="roster reveal">
+        <div>
+          <table>
+            <thead><tr><th>Agent</th><th>Owns</th></tr></thead>
+            <tbody>
+              <tr><td>Claude Code</td><td>Primary builder: pipeline, FastAPI service, role pages, UX reviews</td></tr>
+              <tr><td>Grok</td><td>Parallel workspace for personal products, with shared rules and playbooks</td></tr>
+              <tr><td>WeCom agents</td><td>Ask forwarders for shipping rates and bring quotes back to the team</td></tr>
+              <tr><td>Subagents</td><td>Research, exploration and QC checks, kept out of the main context</td></tr>
+              <tr><td>Me</td><td>Briefs, taste, priorities, sign-off — and every number that leaves the building</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="memo">
+          <div class="bar"><span>MEMORY.md</span><span>excerpt</span></div>
+<pre><span class="k">## Re-baselined</span>
+The baseline is a snapshot of <span class="k">current</span> stock,
+not an opening balance. The cutoff must move
+with it.
+
+<span class="a">Why:</span> at the old cutoff, July sales were
+deducted from stock that already netted
+them out. Totals inflated by ~40%.
+
+<span class="a">How to apply:</span> when a new baseline
+arrives, first ask <span class="k">as of when</span> it is true.
+Never link one without asking.</pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WORK -->
+  <section id="work">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <div class="label mono"><b>Selected work</b>05 · 2017–now</div>
+        <div>
+          <h2>Things I've designed, and things I've had built.</h2>
+        </div>
+      </div>
+
+      <div class="work">
+        <article class="card reveal">
+          <div class="vis"><img src="assets/work/byton.jpg" alt="BYTON CES 2018 concept: a dashboard-wide display with driver and passenger profiles, plus touch screens in the wheel and between the seats" loading="lazy"></div>
+          <div class="info"><h3>BYTON concept car</h3><span class="mono">2017–2018 · CES 2018</span></div>
+          <p>A display that runs the full width of the dashboard, controlled by hand gestures. I designed the gesture interaction model, built the front end in Unity, worked between the design and marketing teams to ship it for CES, and localized the system for China.</p>
+          <div class="tags"><span class="chip">gesture interaction</span><span class="chip">Unity</span><span class="chip">HMI</span></div>
+        </article>
+
+        <article class="card reveal">
+          <div class="vis"><img src="assets/work/option-wheel-masked.jpg" alt="Option Wheel: an options trading ledger with dollar amounts blurred, showing a 43.8% annual book yield" loading="lazy"></div>
+          <div class="info"><h3>Option Wheel</h3><span class="mono">2026 · trading analytics</span></div>
+          <p>Analytics for my own options trading: cash-secured puts and covered calls. Every leg, its premium and its true annual yield, weighted by cash and days held, with live prices to flag assignment risk. White field, one vermillion number.</p>
+          <div class="tags"><span class="chip">data design</span><span class="chip">finance</span><span class="chip">built with agents</span></div>
+        </article>
+
+        <article class="card reveal">
+          <div class="vis"><img src="assets/work/beginning-of-infinity.jpg" alt="Interactive book: The Beginning of Infinity, chapter 1, with a diagram showing how an explanation reaches beyond what it was made to explain" loading="lazy"></div>
+          <div class="info"><h3>Interactive books</h3><span class="mono">2026 · The Beginning of Infinity</span></div>
+          <p>I have more books than time to read them, so I turn the important ones into interactive pages. David Deutsch’s book becomes 18 chapters, one idea each, with diagrams and 3D models you can scroll, tilt and test.</p>
+          <div class="tags"><span class="chip">editorial</span><span class="chip">3D</span><span class="chip">built with agents</span></div>
+        </article>
+
+        <article class="card reveal">
+          <div class="vis" aria-hidden="true">
+            <svg viewBox="0 0 400 250" width="100%" height="100%">
+              <rect width="400" height="250" fill="var(--surface)"/>
+              <g font-family="IBM Plex Mono, monospace" font-size="10.5" fill="var(--ink-2)">
+                <rect x="48" y="44" width="304" height="162" rx="8" fill="var(--bg)" stroke="var(--rule)"/>
+                <text x="64" y="70" fill="var(--ink)">forwarder rate inquiry</text>
+                <rect x="64" y="84" width="170" height="26" rx="6" fill="var(--chip)"/><text x="74" y="101">40HQ · Laem Chabang → 南沙?</text>
+                <rect x="128" y="118" width="208" height="26" rx="6" fill="var(--ink)"/><text x="138" y="135" fill="var(--bg)">3 quotes in, best: forwarder B</text>
+                <rect x="64" y="152" width="120" height="26" rx="6" fill="var(--chip)"/><text x="74" y="169">confirm B ✓</text>
+                <circle cx="330" cy="70" r="4" fill="var(--accent)"/>
+              </g>
+            </svg>
+          </div>
+          <div class="info"><h3>WeCom rate agents</h3><span class="mono">2023–now · automation</span></div>
+          <p>Agents inside WeCom that send shipping-rate inquiries to forwarders, collect the replies and put a comparison in front of the logistics team — work that used to be a morning of messages.</p>
+          <div class="tags"><span class="chip">agents</span><span class="chip">Python</span><span class="chip">conversation design</span></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPERIENCE -->
+  <section id="experience">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <div class="label mono"><b>Experience</b>06 · 2011–now</div>
+        <div><h2>Seven places, three languages. Designer by training, manager who delivers.</h2></div>
+      </div>
+      <div class="xp reveal">
+        <div class="xp-row now"><span class="mono">2023–now</span><h3>Wellstar Trading <span>— General Manager</span></h3><p>Cross-border agri-commodity trade, Thailand and Vietnam into China. About 20 million in revenue at a 3–5% margin. I manage the business end to end and lead a team of 20, taking each plan from decision to delivery. I also built its automation layer with AI agents.</p></div>
+        <div class="xp-row"><span class="mono">2019–2023</span><h3>Rightware <span>— Project Manager</span></h3><p>Kanzi HMI programs for Toyota, Mitsubishi and SAIC. On site in Japan and China every two weeks, bridging a Finnish product team and Asian engineering orgs.</p></div>
+        <div class="xp-row"><span class="mono">2018–2019</span><h3>SF Motors <span>— Senior UI/UX Designer</span></h3><p>Interaction model and information architecture for infotainment and cluster. Four patents filed.</p></div>
+        <div class="xp-row"><span class="mono">2017–2018</span><h3>BYTON <span>— HMI UI Specialist</span></h3><p>Shipped the gesture interaction model for the CES 2018 concept car; front-end in Unity. Localized infotainment for China.</p></div>
+        <div class="xp-row"><span class="mono">2015–2017</span><h3>Karma Automotive <span>— UX Technical Designer</span></h3><p>Next-gen infotainment in Kanzi, wired to live vehicle signals. User research, usability tests, 3D and motion prototypes.</p></div>
+        <div class="xp-row"><span class="mono">2011–2012</span><h3>Japanese Government (JET) <span>— CIR</span></h3><p>International programs for residents and newcomers in a Chiba local government.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="wrap">
+      <div class="about reveal">
+        <div class="mono"><b style="display:block;font:500 16px var(--sans);color:var(--ink);margin-bottom:4px">About</b>07</div>
+        <p class="big">I like tools that make complicated things easier to understand.</p>
+        <div class="about-cols">
+          <p>I turn insight from user research into features. My design philosophy: minimal, useful, sophisticated, with a little joy. Today I work with AI agents to turn what I read and research into working products.</p>
+          <p>UC Berkeley, then a year at Kyoto University: three years in Japan in all. Based in Shenzhen and Hong Kong, often on the ground in Shanghai, Thailand and Vietnam.</p>
+        </div>
+        <ul class="facts">
+          <li><span>Design</span><span>Research, interaction, IA, HMI</span></li>
+          <li><span>Interests</span><span>VC · education · finance</span></li>
+          <li><span>Agents</span><span>Claude Code, Grok, WeCom bots</span></li>
+          <li><span>Build</span><span>Python, FastAPI, three.js, Kanzi</span></li>
+          <li><span>Review</span><span>Nielsen heuristics, QC validators</span></li>
+          <li><span>Languages</span><span>English · 日本語 · 中文</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" class="contact">
+    <div class="wrap">
+      <div class="mono" style="margin-bottom:20px"><span class="dot"></span>Available for conversations</div>
+      <h2>Have a system that needs designing — and agents that need managing?</h2>
+      <a class="mail" href="mailto:haku.cof@proton.me">haku.cof@proton.me
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap mono"><span>Hakuei Huang · 黄 · 2026</span><span>Designed by Hakuei, built with agents</span></div>
+</footer>
+<div class="lb" id="lb" role="dialog" aria-label="Enlarged screenshot"><span class="x">esc · close</span><img alt=""></div>
+
+<script>
+(function(){
+  // theme toggle
+  var root=document.documentElement, btn=document.getElementById('theme');
+  try{var saved=localStorage.getItem('hh-theme'); if(saved) root.setAttribute('data-theme',saved);}catch(e){}
+  btn.addEventListener('click',function(){
+    var dark = root.getAttribute('data-theme') ? root.getAttribute('data-theme')==='dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+    var next = dark ? 'light' : 'dark'; root.setAttribute('data-theme',next);
+    try{localStorage.setItem('hh-theme',next);}catch(e){}
+  });
+
+  // agent log
+  var lines=[
+    ['claude','spec','PRD 转库 transfer → acceptance criteria set'],
+    ['claude','build','POST /api/transfer + map dialog'],
+    ['qc','verify','panel totals reconcile · drift 0.0','ok'],
+    ['claude','review','Nielsen pass on 出库 · 3 sev-2 fixes'],
+    ['sub','sources','Wright Flyer: every claim cited'],
+    ['wecom','inquiry','40HQ rate request → 3 forwarders'],
+    ['qc','verify','month columns aligned · dates clean','ok'],
+    ['claude','memory','root cause logged: cutoff vs baseline'],
+    ['haku','sign-off','ship to NAS · restart task','ok'],
+    ['sub','research','three.js take-apart, nine assemblies'],
+    ['claude','fix','availability no longer double-deducted'],
+    ['wecom','reply','best quote → logistics team','ok']
+  ];
+  var ol=document.getElementById('log'), clock=document.getElementById('clock'), i=0;
+  var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function now(){try{return new Date().toLocaleTimeString('en-GB',{timeZone:'Asia/Shanghai',hour:'2-digit',minute:'2-digit'});}catch(e){return '';}}
+  function add(){
+    var l=lines[i%lines.length]; i++;
+    var li=document.createElement('li');
+    li.innerHTML='<span class="who">'+l[0]+'</span><span>'+l[1]+'</span><span'+(l[3]?' class="ok"':'')+'>'+l[2]+'</span>';
+    var prev=ol.querySelector('.new'); if(prev) prev.classList.remove('new');
+    li.classList.add('new'); ol.insertBefore(li,ol.firstChild);
+    while(ol.children.length>7) ol.removeChild(ol.lastChild);
+    clock.textContent=now()+' Shenzhen';
+  }
+  for(var k=0;k<6;k++) add();
+  if(!reduce) setInterval(add,2600);
+
+  // ERP screenshot tabs
+  var caps=[
+    ['nas:8000/shipping.html','Every inbound container from loading port to warehouse: in transit, scheduled, at port, cleared, with days-to-arrival.'],
+    ['nas:8000/warehouse_map.html','Live stock by warehouse and port across China, filterable by origin country and brand, ranked by volume.'],
+    ['nas:8000/salesHistory.html','Fifteen years of dispatch notices, 2012 to today, by year, quarter, customer and brand.'],
+    ['nas:8000/quality.html','品控: arrivals, issues and lab tests joined by contract number into a complaint rate per brand.'],
+    ['nas:8200/gl/','财务总账 workbench: each role sees its own queue, and month-end close follows the PRD timeline.']
+  ];
+  var tabs=document.querySelectorAll('.tabs button'), imgs=document.querySelectorAll('.stage img');
+  function pick(i){
+    tabs.forEach(function(t){var on=+t.dataset.i===i;t.classList.toggle('on',on);t.setAttribute('aria-selected',on)});
+    imgs.forEach(function(m){m.classList.toggle('on',+m.dataset.i===i)});
+    document.getElementById('shot-url').textContent=caps[i][0];
+    document.getElementById('shot-cap').textContent=caps[i][1];
+    document.getElementById('shot-n').textContent=(i+1)+' / 5 · click to enlarge';
+  }
+  tabs.forEach(function(t){t.addEventListener('click',function(){pick(+t.dataset.i)});
+    t.addEventListener('keydown',function(e){var d=e.key==='ArrowRight'?1:e.key==='ArrowLeft'?-1:0;if(!d)return;var n=(+t.dataset.i+d+5)%5;pick(n);tabs[n].focus();});});
+  var lb=document.getElementById('lb');
+  var stage=document.querySelector('.stage');
+  function enlarge(){var m=stage.querySelector('img.on');lb.querySelector('img').src=m.src;lb.querySelector('img').alt=m.alt;lb.classList.add('on');}
+  stage.addEventListener('click',enlarge);
+  stage.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();enlarge();}});
+  document.querySelectorAll('.hero-shot, .q img, .card .vis img').forEach(function(im){
+    im.classList.add('zoomable');im.tabIndex=0;im.setAttribute('role','button');
+    function open(){var big=lb.querySelector('img');big.src=im.currentSrc||im.src;big.alt=im.alt;lb.classList.add('on');}
+    im.addEventListener('click',open);
+    im.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();open();}});
+  });
+  lb.addEventListener('click',function(){lb.classList.remove('on')});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')lb.classList.remove('on')});
+
+  // reveal
+  var els=document.querySelectorAll('.reveal');
+  if('IntersectionObserver' in window && !reduce){
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target);}})},{rootMargin:'0px 0px -8% 0px'});
+    els.forEach(function(e){io.observe(e)});
+  } else els.forEach(function(e){e.classList.add('on')});
+})();
+</script>
+</body>
+</html>
